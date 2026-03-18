@@ -14,282 +14,245 @@
       min-height: 100vh;
       padding: 2rem;
     }
-
-    .lab {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+    .lab { max-width: 1000px; margin: 0 auto; }
 
     /* ── Top bar ── */
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #111;
-      flex: 1;
-    }
+    .topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 2rem; flex-wrap: wrap; }
+    .title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #111; flex: 1; }
+    .topbar-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .upload-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 18px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 13px;
-      font-family: inherit;
-      color: #111;
-      background: #fff;
-      cursor: pointer;
-      transition: background 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 18px; border: 1px solid #ccc; border-radius: 8px;
+      font-size: 13px; font-family: inherit; color: #111;
+      background: #fff; cursor: pointer; transition: background 0.15s;
     }
     .upload-btn:hover { background: #ebebeb; }
     #fileInput { display: none; }
 
+    /* ── Grayscale toggle ── */
+    .toggle-wrap {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px;
+      background: #fff; cursor: pointer; font-size: 13px; color: #666;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .toggle-wrap:hover { background: #ebebeb; }
+    .toggle-wrap.on { background: #2C2C2A; color: #fff; border-color: #2C2C2A; }
+    .toggle-switch {
+      width: 28px; height: 16px; border-radius: 8px; background: #ddd;
+      position: relative; transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle-switch::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #fff; transition: left 0.2s;
+    }
+    .toggle-wrap.on .toggle-switch { background: #639922; }
+    .toggle-wrap.on .toggle-switch::after { left: 14px; }
+
+    /* ── Drop zone ── */
+    .drop-zone {
+      border: 2px dashed #ddd; border-radius: 14px;
+      padding: 3.5rem 1rem; text-align: center;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      background: #fff; margin-bottom: 1.5rem;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #378ADD; background: #EBF4FD;
+    }
+    body.edge-mode .drop-zone:hover, body.edge-mode .drop-zone.dragover {
+      border-color: #D85A30; background: #FAEEE9;
+    }
+    .drop-zone.has-image { padding: 0; border: 1px solid #ddd; overflow: hidden; cursor: default; }
+    .drop-zone-text { color: #aaa; font-size: 14px; line-height: 2; pointer-events: none; }
+    .drop-zone-text strong { color: #666; display: block; font-size: 16px; margin-bottom: 4px; }
+    .drop-zone-icon { font-size: 32px; margin-bottom: 8px; line-height: 1; }
+    .drop-preview { display: block; width: 100%; height: auto; max-height: 360px; object-fit: contain; }
+    .drop-caption {
+      padding: 8px 14px; background: #fff; border-top: 1px solid #e5e5e5;
+      font-size: 12px; color: #777; display: flex; justify-content: space-between;
+    }
+    .drop-caption a { color: #378ADD; cursor: pointer; font-size: 11px; text-decoration: none; }
+    .drop-caption a:hover { text-decoration: underline; }
+    body.edge-mode .drop-caption a { color: #D85A30; }
+
     /* ── Section label ── */
     .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #888;
-      margin-bottom: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #888; margin-bottom: 10px;
     }
 
     /* ── Filter type tabs ── */
     .type-tabs {
-      display: flex;
-      gap: 0;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      background: #ebebeb;
+      display: flex; border: 1px solid #ddd; border-radius: 10px;
+      overflow: hidden; margin-bottom: 1.5rem; background: #ebebeb;
     }
-
     .type-tab {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: #666;
+      flex: 1; padding: 12px 16px; font-family: inherit; cursor: pointer;
+      border: none; background: transparent; color: #666;
       transition: background 0.15s, color 0.15s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
     }
-
     .type-tab .tab-name { font-size: 14px; font-weight: 600; }
     .type-tab .tab-desc { font-size: 11px; color: #999; font-weight: 400; }
-
-    .type-tab.active {
-      background: #fff;
-      color: #111;
-      border-radius: 9px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
+    .type-tab.active { background: #fff; color: #111; border-radius: 9px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
     .type-tab.active .tab-desc { color: #666; }
-
     .type-tab.gaussian.active { border-top: 3px solid #378ADD; }
     .type-tab.edge.active     { border-top: 3px solid #D85A30; }
 
-    /* ── Kernel cards ── */
-    .kernels {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 1.5rem;
-    }
-
+    /* ── Kernel cards + thumbnail preview ── */
+    .kernels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
     .kernel-card {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      border: 1px solid #ddd; border-radius: 12px; overflow: hidden;
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
       background: #fff;
     }
-
-    .kernel-card.active-gaussian {
-      border: 2px solid #378ADD;
-      background: #EBF4FD;
-    }
-    .kernel-card.active-edge {
-      border: 2px solid #D85A30;
-      background: #FAEEE9;
-    }
-
-    .kernel-card h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #111;
-      margin-bottom: 4px;
-    }
-    .kernel-card p {
-      font-size: 12px;
-      color: #666;
-      line-height: 1.6;
-    }
-
-    /* kernel descriptions per type */
+    .kernel-card.active-gaussian { border: 2px solid #378ADD; background: #EBF4FD; }
+    .kernel-card.active-edge     { border: 2px solid #D85A30; background: #FAEEE9; }
+    .kernel-card-body { padding: 14px 16px; }
+    .kernel-card h3 { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 4px; }
+    .kernel-card p  { font-size: 12px; color: #666; line-height: 1.6; }
     .desc-gaussian { display: block; }
     .desc-edge     { display: none; }
-
     body.edge-mode .desc-gaussian { display: none; }
     body.edge-mode .desc-edge     { display: block; }
 
-    /* ── Matrix preview ── */
+    /* thumbnail inside card */
+    .thumb-wrap { height: 90px; background: #f0f0f0; position: relative; overflow: hidden; }
+    .thumb-canvas { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .thumb-spinner {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; font-size: 11px; color: #aaa;
+    }
+
+    /* ── Perf badge ── */
+    .perf-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: 20px; font-size: 11px;
+      font-weight: 600; background: #EAF3DE; color: #3B6D11;
+      margin-left: 8px; vertical-align: middle;
+    }
+    body.edge-mode .perf-badge { background: #f5f5f0; color: #888; }
+
+    /* ── Matrix toggle ── */
     .matrix-toggle {
-      font-size: 12px;
-      color: #378ADD;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
-      display: inline-block;
-      user-select: none;
+      font-size: 12px; color: #378ADD; cursor: pointer;
+      margin-bottom: 1.5rem; display: inline-block; user-select: none;
     }
     body.edge-mode .matrix-toggle { color: #D85A30; }
     .matrix-toggle:hover { text-decoration: underline; }
-
     .matrix-box {
-      display: none;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin-bottom: 1.5rem;
-      overflow-x: auto;
+      display: none; background: #fff; border: 1px solid #ddd;
+      border-radius: 10px; padding: 14px 18px; margin-bottom: 1.5rem; overflow-x: auto;
     }
     .matrix-box.open { display: block; }
-
     .matrix-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
     .mtab {
-      padding: 4px 12px;
-      font-size: 12px;
-      font-family: inherit;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #fff;
-      color: #666;
+      padding: 4px 12px; font-size: 12px; font-family: inherit;
+      border: 1px solid #ddd; border-radius: 6px; cursor: pointer;
+      background: #fff; color: #666;
     }
     .mtab.active { background: #111; color: #fff; border-color: #111; }
-
     .matrix-grid { display: none; }
     .matrix-grid.active { display: block; }
-
-    table.matrix {
-      border-collapse: collapse;
-      font-size: 12px;
-      font-family: 'Courier New', monospace;
-    }
-    table.matrix td {
-      padding: 4px 10px;
-      text-align: right;
-      border: 1px solid #e5e5e5;
-      min-width: 36px;
-    }
-    td.pos { color: #185FA5; }
-    td.neg { color: #993C1D; }
+    table.matrix { border-collapse: collapse; font-size: 12px; font-family: 'Courier New', monospace; }
+    table.matrix td { padding: 4px 10px; text-align: right; border: 1px solid #e5e5e5; min-width: 36px; }
+    td.pos  { color: #185FA5; }
+    td.neg  { color: #993C1D; }
     td.zero { color: #999; }
 
     /* ── Buttons ── */
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
+    .actions { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
     .btn {
-      padding: 9px 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      background: #fff;
-      color: #111;
-      transition: background 0.15s;
+      padding: 9px 20px; border: 1px solid #ccc; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
+      background: #fff; color: #111; transition: background 0.15s;
     }
     .btn:hover { background: #ebebeb; }
     .btn.primary-gaussian { background: #378ADD; color: #fff; border-color: #185FA5; }
     .btn.primary-gaussian:hover { background: #185FA5; }
-    .btn.primary-edge     { background: #D85A30; color: #fff; border-color: #993C1D; }
+    .btn.primary-edge { background: #D85A30; color: #fff; border-color: #993C1D; }
     .btn.primary-edge:hover { background: #993C1D; }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .status {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 1rem;
-      min-height: 16px;
-    }
+    /* ── Progress bar ── */
+    .progress-wrap { display: none; align-items: center; gap: 12px; margin-bottom: 1rem; }
+    .progress-wrap.visible { display: flex; }
+    .progress-bar-bg { flex: 1; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; width: 0%; background: #378ADD; border-radius: 3px; transition: width 0.1s; }
+    body.edge-mode .progress-bar-fill { background: #D85A30; }
+    .progress-text { font-size: 12px; color: #666; min-width: 60px; text-align: right; }
 
-    /* ── Canvas grid ── */
-    .canvases {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
+    .status { font-size: 12px; color: #666; margin-bottom: 1rem; min-height: 16px; }
+    .divider { border: none; border-top: 1px solid #e0e0e0; margin: 1.5rem 0; }
 
-    .cv-wrap {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fafafa;
-    }
+    /* ── Output area ── */
+    #output { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 
+    /* ── Regular canvas card ── */
+    .cv-wrap { border: 1px solid #ddd; border-radius: 12px; overflow: hidden; background: #fafafa; }
     .cv-label {
-      font-size: 12px;
-      color: #555;
-      padding: 8px 12px;
-      border-bottom: 1px solid #e5e5e5;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
+      font-size: 12px; color: #555; padding: 8px 12px;
+      border-bottom: 1px solid #e5e5e5; display: flex;
+      justify-content: space-between; align-items: center; background: #fff;
     }
-
-    .save-link {
-      color: #378ADD;
-      cursor: pointer;
-      font-size: 11px;
-      text-decoration: none;
-    }
+    .cv-label .meta { font-size: 10px; color: #aaa; }
+    .save-link { color: #378ADD; cursor: pointer; font-size: 11px; text-decoration: none; }
     body.edge-mode .save-link { color: #D85A30; }
     .save-link:hover { text-decoration: underline; }
-
     canvas { display: block; width: 100%; height: auto; }
 
-    .empty {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #aaa;
-      font-size: 14px;
-      border: 2px dashed #ddd;
-      border-radius: 12px;
+    /* ── Before/After slider ── */
+    .ba-wrap {
+      border: 1px solid #ddd; border-radius: 12px; overflow: hidden;
+      grid-column: 1 / -1;  /* span full width when shown */
     }
+    .ba-header {
+      padding: 8px 14px; background: #fff; border-bottom: 1px solid #e5e5e5;
+      display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #555;
+    }
+    .ba-hint { font-size: 11px; color: #aaa; }
+    .ba-stage {
+      position: relative; overflow: hidden; cursor: col-resize;
+      background: #111; touch-action: none;
+    }
+    .ba-after  { display: block; width: 100%; height: auto; user-select: none; pointer-events: none; }
+    .ba-before-clip {
+      position: absolute; top: 0; left: 0; height: 100%;
+      overflow: hidden; pointer-events: none;
+    }
+    .ba-before { display: block; user-select: none; pointer-events: none; }
+    .ba-line {
+      position: absolute; top: 0; width: 2px; height: 100%;
+      background: #fff; transform: translateX(-50%);
+      box-shadow: 0 0 6px rgba(0,0,0,0.4); pointer-events: none;
+    }
+    .ba-handle {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; font-size: 14px;
+    }
+    .ba-label {
+      position: absolute; top: 10px; background: rgba(0,0,0,0.45);
+      color: #fff; font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      pointer-events: none;
+    }
+    .ba-label.left  { left: 12px; }
+    .ba-label.right { right: 12px; }
 
-    /* ── Divider ── */
-    .divider {
-      border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 1.5rem 0;
+    /* ── Skeleton ── */
+    .skeleton { border: 1px solid #ddd; border-radius: 12px; overflow: hidden; background: #fafafa; }
+    .skeleton-label { padding: 8px 12px; border-bottom: 1px solid #e5e5e5; background: #fff; height: 34px; }
+    .skeleton-img {
+      height: 180px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%; animation: shimmer 1.2s infinite;
     }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   </style>
 </head>
 <body>
@@ -298,22 +261,43 @@
   <!-- Top bar -->
   <div class="topbar">
     <span class="title">影像濾波器實驗室</span>
-    <label class="upload-btn" for="fileInput">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <path d="M8 1v10M4 5l4-4 4 4M2 13h12"
-              stroke="currentColor" stroke-width="1.5"
-              stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      載入圖片
-    </label>
-    <input type="file" id="fileInput" accept="image/*">
+    <div class="topbar-actions">
+      <div class="toggle-wrap" id="grayToggle" onclick="toggleGrayscale()">
+        <div class="toggle-switch"></div>
+        <span>灰階模式</span>
+      </div>
+      <label class="upload-btn" for="fileInput">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1v10M4 5l4-4 4 4M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        載入圖片
+      </label>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
   </div>
 
-  <!-- Step 1: filter type -->
+  <!-- Drop zone -->
+  <div class="drop-zone" id="dropZone" onclick="onDropZoneClick()">
+    <div class="drop-zone-text" id="dropText">
+      <div class="drop-zone-icon">&#x1F5BC;</div>
+      <strong>拖曳圖片到這裡</strong>
+      或點擊選擇檔案
+    </div>
+    <canvas class="drop-preview" id="dropPreview" style="display:none"></canvas>
+    <div class="drop-caption" id="dropCaption" style="display:none">
+      <span id="dropFilename"></span>
+      <a onclick="event.stopPropagation(); clearImage()">移除</a>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
   <div class="section-label">Step 1 — 選擇濾波器類型</div>
   <div class="type-tabs">
     <button class="type-tab gaussian active" onclick="setType('gaussian', this)">
-      <span class="tab-name">高斯平滑</span>
+      <span class="tab-name">
+        高斯平滑
+        <span class="perf-badge">⚡ 可分離卷積</span>
+      </span>
       <span class="tab-desc">Gaussian Smoothing — 模糊 / 降噪</span>
     </button>
     <button class="type-tab edge" onclick="setType('edge', this)">
@@ -322,33 +306,41 @@
     </button>
   </div>
 
-  <!-- Step 2: kernel size -->
-  <div class="section-label">Step 2 — 選擇濾波器尺寸</div>
+  <!-- Step 2 -->
+  <div class="section-label">Step 2 — 選擇濾波器尺寸（懸停預覽）</div>
   <div class="kernels">
-    <div class="kernel-card active-gaussian" data-k="3" onclick="selectKernel(3, this)">
-      <h3>3 × 3</h3>
-      <span class="desc-gaussian"><p>輕微平滑<br>保留邊緣細節</p></span>
-      <span class="desc-edge"><p>精細邊緣<br>雜訊較多</p></span>
+    <div class="kernel-card active-gaussian" data-k="3" onclick="selectKernel(3, this)" onmouseenter="hoverPreview(3)" onmouseleave="clearHoverPreview()">
+      <div class="thumb-wrap"><canvas class="thumb-canvas" id="thumb3"></canvas><div class="thumb-spinner" id="spin3">—</div></div>
+      <div class="kernel-card-body">
+        <h3>3 × 3</h3>
+        <span class="desc-gaussian"><p>輕微平滑<br>保留邊緣細節</p></span>
+        <span class="desc-edge"><p>精細邊緣<br>雜訊較多</p></span>
+      </div>
     </div>
-    <div class="kernel-card" data-k="5" onclick="selectKernel(5, this)">
-      <h3>5 × 5</h3>
-      <span class="desc-gaussian"><p>中度模糊<br>噪點明顯降低</p></span>
-      <span class="desc-edge"><p>中等輪廓<br>十字加權</p></span>
+    <div class="kernel-card" data-k="5" onclick="selectKernel(5, this)" onmouseenter="hoverPreview(5)" onmouseleave="clearHoverPreview()">
+      <div class="thumb-wrap"><canvas class="thumb-canvas" id="thumb5"></canvas><div class="thumb-spinner" id="spin5">—</div></div>
+      <div class="kernel-card-body">
+        <h3>5 × 5</h3>
+        <span class="desc-gaussian"><p>中度模糊<br>噪點明顯降低</p></span>
+        <span class="desc-edge"><p>中等輪廓<br>十字加權</p></span>
+      </div>
     </div>
-    <div class="kernel-card" data-k="9" onclick="selectKernel(9, this)">
-      <h3>9 × 9</h3>
-      <span class="desc-gaussian"><p>強力平滑<br>紋理顯著柔化</p></span>
-      <span class="desc-edge"><p>十字方向邊緣<br>水平/垂直敏感</p></span>
+    <div class="kernel-card" data-k="9" onclick="selectKernel(9, this)" onmouseenter="hoverPreview(9)" onmouseleave="clearHoverPreview()">
+      <div class="thumb-wrap"><canvas class="thumb-canvas" id="thumb9"></canvas><div class="thumb-spinner" id="spin9">—</div></div>
+      <div class="kernel-card-body">
+        <h3>9 × 9</h3>
+        <span class="desc-gaussian"><p>強力平滑<br>紋理顯著柔化</p></span>
+        <span class="desc-edge"><p>十字方向邊緣<br>水平/垂直敏感</p></span>
+      </div>
     </div>
   </div>
 
-  <!-- Matrix preview toggle -->
   <span class="matrix-toggle" onclick="toggleMatrix()">▶ 查看核心矩陣數值</span>
   <div class="matrix-box" id="matrixBox">
     <div class="matrix-tabs">
-      <button class="mtab active" onclick="showMtab(3, this)">3×3</button>
-      <button class="mtab" onclick="showMtab(5, this)">5×5</button>
-      <button class="mtab" onclick="showMtab(9, this)">9×9</button>
+      <button class="mtab active" onclick="showMtab(3,this)">3×3</button>
+      <button class="mtab" onclick="showMtab(5,this)">5×5</button>
+      <button class="mtab" onclick="showMtab(9,this)">9×9</button>
     </div>
     <div id="m3" class="matrix-grid active"></div>
     <div id="m5" class="matrix-grid"></div>
@@ -357,361 +349,602 @@
 
   <hr class="divider">
 
-  <!-- Step 3: apply -->
+  <!-- Step 3 -->
   <div class="section-label">Step 3 — 套用</div>
   <div class="actions">
-    <button class="btn primary-gaussian" id="applyBtn" onclick="applySelected()" disabled>
-      套用選取濾波器
-    </button>
-    <button class="btn" id="allBtn" onclick="applyAll()" disabled>
-      套用全部三種尺寸
-    </button>
+    <button class="btn primary-gaussian" id="applyBtn" onclick="applySelected()" disabled>套用選取濾波器</button>
+    <button class="btn" id="allBtn" onclick="applyAll()" disabled>套用全部三種尺寸</button>
   </div>
 
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0%</span>
+  </div>
   <div class="status" id="status"></div>
 
-  <div id="output">
-    <div class="empty">請先載入一張圖片，再選擇濾波器套用</div>
-  </div>
+  <div id="output"></div>
 
 </div>
 
 <script>
-/* ════════════════════════════════════════════
+/* ═══════════════════════════════════════════
    核心定義
-════════════════════════════════════════════ */
+═══════════════════════════════════════════ */
 const KERNELS = {
   gaussian: {
-    3: { data: [[1,2,1],[2,4,2],[1,2,1]], sum: 16 },
-    5: {
-      data: [
-        [1, 4, 6, 4,1],
-        [4,16,24,16,4],
-        [6,24,36,24,6],
-        [4,16,24,16,4],
-        [1, 4, 6, 4,1]
-      ],
-      sum: 256
-    },
-    9: {
-      data: [
-        [ 1, 4,10, 16, 19, 16,10, 4, 1],
-        [ 4,16,36, 64, 76, 64,36,16, 4],
-        [10,36,81,144,171,144,81,36,10],
-        [16,64,144,256,304,256,144,64,16],
-        [19,76,171,304,361,304,171,76,19],
-        [16,64,144,256,304,256,144,64,16],
-        [10,36,81,144,171,144,81,36,10],
-        [ 4,16,36, 64, 76, 64,36,16, 4],
-        [ 1, 4,10, 16, 19, 16,10, 4, 1]
-      ],
-      sum: 4096
-    }
+    separable: true,
+    3: { k1d: [1,2,1],               sum1d: 4  },
+    5: { k1d: [1,4,6,4,1],           sum1d: 16 },
+    9: { k1d: [1,4,10,16,19,16,10,4,1], sum1d: 81 }
   },
   edge: {
-    3: {
-      data: [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]],
-      sum: null  // 不做 normalize，直接 clamp
-    },
-    5: {
-      data: [
-        [-1,-1,-1,-1,-1],
-        [-1, 1, 2, 1,-1],
-        [-1, 2, 4, 2,-1],
-        [-1, 1, 2, 1,-1],
-        [-1,-1,-1,-1,-1]
-      ],
-      sum: null
-    },
+    separable: false,
+    3: { data: [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]], sum: null },
+    5: { data: [[-1,-1,-1,-1,-1],[-1,1,2,1,-1],[-1,2,4,2,-1],[-1,1,2,1,-1],[-1,-1,-1,-1,-1]], sum: null },
     9: {
       data: [
-        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
-        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
-        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
-        [-1,-1, 8, 8,20, 8, 8,-1,-1],
-        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
-        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
-        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],[-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1, 8, 8,20, 8, 8,-1,-1],[-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1],
         [-1,-1,-1,-1,-1,-1,-1,-1,-1]
-      ],
-      sum: null
+      ], sum: null
     }
   }
 };
 
-/* ════════════════════════════════════════════
-   狀態
-════════════════════════════════════════════ */
-let origImg    = null;
-let filterType = 'gaussian';   // 'gaussian' | 'edge'
-let selectedK  = 3;
+/* ═══════════════════════════════════════════
+   Worker blob
+═══════════════════════════════════════════ */
+const WORKER_CODE = `
+self.onmessage = function(e) {
+  const { type, kSize, pixels, width, height, kernelDef, grayscale } = e.data;
+  let sd = new Uint8ClampedArray(pixels);
 
-/* ════════════════════════════════════════════
-   UI 互動
-════════════════════════════════════════════ */
+  if (grayscale) {
+    for (let i=0;i<sd.length;i+=4) {
+      const g = Math.round(sd[i]*0.587 + sd[i+1]*0.299 + sd[i+2]*0.114);
+      sd[i]=sd[i+1]=sd[i+2]=g;
+    }
+  }
+
+  let result;
+  if (type === 'gaussian') result = gaussianSep(sd, width, height, kernelDef.k1d, kernelDef.sum1d);
+  else                     result = convolve2D(sd, width, height, kernelDef.data, kernelDef.sum);
+
+  self.postMessage({ result: result.buffer }, [result.buffer]);
+};
+
+function gaussianSep(sd, W, H, k1d, sum1d) {
+  const kLen=k1d.length, half=Math.floor(kLen/2);
+  const tmp=new Float32Array(W*H*4), out=new Uint8ClampedArray(W*H*4);
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      let r=0,g=0,b=0;
+      for(let i=0;i<kLen;i++){const sx=Math.min(W-1,Math.max(0,x+i-half)),idx=(y*W+sx)*4,w=k1d[i];r+=sd[idx]*w;g+=sd[idx+1]*w;b+=sd[idx+2]*w;}
+      const oi=(y*W+x)*4;tmp[oi]=r/sum1d;tmp[oi+1]=g/sum1d;tmp[oi+2]=b/sum1d;tmp[oi+3]=sd[oi+3];
+    }
+    if(y%50===0)self.postMessage({progress:Math.round(y/H*50)});
+  }
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      let r=0,g=0,b=0;
+      for(let i=0;i<kLen;i++){const sy=Math.min(H-1,Math.max(0,y+i-half)),idx=(sy*W+x)*4,w=k1d[i];r+=tmp[idx]*w;g+=tmp[idx+1]*w;b+=tmp[idx+2]*w;}
+      const oi=(y*W+x)*4;out[oi]=Math.round(r/sum1d);out[oi+1]=Math.round(g/sum1d);out[oi+2]=Math.round(b/sum1d);out[oi+3]=tmp[oi+3];
+    }
+    if(y%50===0)self.postMessage({progress:50+Math.round(y/H*50)});
+  }
+  return out;
+}
+
+function convolve2D(sd, W, H, kd, ks) {
+  const kSize=kd.length, half=Math.floor(kSize/2), out=new Uint8ClampedArray(W*H*4);
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      let r=0,g=0,b=0;
+      for(let ky=0;ky<kSize;ky++)for(let kx=0;kx<kSize;kx++){const sy=Math.min(H-1,Math.max(0,y+ky-half)),sx=Math.min(W-1,Math.max(0,x+kx-half)),idx=(sy*W+sx)*4,w=kd[ky][kx];r+=sd[idx]*w;g+=sd[idx+1]*w;b+=sd[idx+2]*w;}
+      const oi=(y*W+x)*4;
+      if(ks!==null){out[oi]=Math.round(r/ks);out[oi+1]=Math.round(g/ks);out[oi+2]=Math.round(b/ks);}
+      else{out[oi]=Math.min(255,Math.max(0,Math.round(r)));out[oi+1]=Math.min(255,Math.max(0,Math.round(g)));out[oi+2]=Math.min(255,Math.max(0,Math.round(b)));}
+      out[oi+3]=sd[oi+3];
+    }
+    if(y%50===0)self.postMessage({progress:Math.round(y/H*100)});
+  }
+  return out;
+}
+`;
+function makeWorker() {
+  return new Worker(URL.createObjectURL(new Blob([WORKER_CODE], { type: 'application/javascript' })));
+}
+
+/* ═══════════════════════════════════════════
+   State
+═══════════════════════════════════════════ */
+let origImg    = null;
+let origCanvas = null;   // full-res canvas of original (with grayscale applied)
+let filterType = 'gaussian';
+let selectedK  = 3;
+let isRunning  = false;
+let grayscale  = false;
+let thumbCache = {};     // {type_k_gray: dataURL}
+let thumbWorkers = {};   // active thumb workers
+
+/* ═══════════════════════════════════════════
+   Drop zone & file loading
+═══════════════════════════════════════════ */
+const dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadFile(file);
+});
+
+function onDropZoneClick() {
+  if (!origImg) document.getElementById('fileInput').click();
+}
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      origImg = img;
+      thumbCache = {};
+
+      // Draw to drop zone preview canvas
+      const prev = document.getElementById('dropPreview');
+      prev.width = img.width; prev.height = img.height;
+      prev.getContext('2d').drawImage(img, 0, 0);
+      prev.style.display = 'block';
+      document.getElementById('dropText').style.display = 'none';
+      document.getElementById('dropCaption').style.display = 'flex';
+      document.getElementById('dropFilename').textContent = `${file.name}  （${img.width} × ${img.height} px）`;
+      dropZone.classList.add('has-image');
+
+      document.getElementById('applyBtn').disabled = false;
+      document.getElementById('allBtn').disabled   = false;
+      document.getElementById('status').textContent = '';
+      document.getElementById('output').innerHTML = '';
+
+      buildThumbnails();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage() {
+  origImg = null; thumbCache = {};
+  document.getElementById('dropPreview').style.display = 'none';
+  document.getElementById('dropText').style.display = 'block';
+  document.getElementById('dropCaption').style.display = 'none';
+  dropZone.classList.remove('has-image');
+  document.getElementById('applyBtn').disabled = true;
+  document.getElementById('allBtn').disabled   = true;
+  document.getElementById('output').innerHTML = '';
+  document.getElementById('status').textContent = '';
+  document.getElementById('fileInput').value = '';
+  [3,5,9].forEach(k => {
+    const cv = document.getElementById(`thumb${k}`);
+    cv.style.display = 'none';
+    document.getElementById(`spin${k}`).textContent = '—';
+  });
+}
+
+/* ═══════════════════════════════════════════
+   Grayscale toggle
+═══════════════════════════════════════════ */
+function toggleGrayscale() {
+  grayscale = !grayscale;
+  document.getElementById('grayToggle').classList.toggle('on', grayscale);
+  thumbCache = {};
+  if (origImg) buildThumbnails();
+}
+
+/* ═══════════════════════════════════════════
+   Thumbnail preview generation
+═══════════════════════════════════════════ */
+const THUMB_SIZE = 160;
+
+function buildThumbnails() {
+  if (!origImg) return;
+  [3,5,9].forEach(k => {
+    const cv = document.getElementById(`thumb${k}`);
+    cv.style.display = 'none';
+    document.getElementById(`spin${k}`).textContent = '처리중…';
+    renderThumb(k);
+  });
+}
+
+function renderThumb(k) {
+  const cacheKey = `${filterType}_${k}_${grayscale}`;
+  if (thumbCache[cacheKey]) { applyThumb(k, thumbCache[cacheKey]); return; }
+
+  // Scale down to THUMB_SIZE for speed
+  const scale = Math.min(1, THUMB_SIZE / Math.max(origImg.width, origImg.height));
+  const tw = Math.round(origImg.width * scale);
+  const th = Math.round(origImg.height * scale);
+
+  const sc = document.createElement('canvas');
+  sc.width = tw; sc.height = th;
+  sc.getContext('2d').drawImage(origImg, 0, 0, tw, th);
+  const imgData = sc.getContext('2d').getImageData(0, 0, tw, th);
+
+  const kernelDef = filterType === 'gaussian'
+    ? { k1d: KERNELS.gaussian[k].k1d, sum1d: KERNELS.gaussian[k].sum1d }
+    : { data: KERNELS.edge[k].data, sum: KERNELS.edge[k].sum };
+
+  // cancel any existing worker for this slot
+  if (thumbWorkers[k]) { thumbWorkers[k].terminate(); }
+
+  const worker = makeWorker();
+  thumbWorkers[k] = worker;
+  const pixels = imgData.data.slice().buffer;
+
+  worker.onmessage = e => {
+    if (e.data.result !== undefined) {
+      const result = new Uint8ClampedArray(e.data.result);
+      const dc = document.createElement('canvas');
+      dc.width = tw; dc.height = th;
+      dc.getContext('2d').putImageData(new ImageData(result, tw, th), 0, 0);
+      const url = dc.toDataURL();
+      thumbCache[cacheKey] = url;
+      applyThumb(k, url);
+      worker.terminate();
+      delete thumbWorkers[k];
+    }
+  };
+
+  worker.postMessage(
+    { type: filterType, kSize: k, pixels, width: tw, height: th, kernelDef, grayscale },
+    [pixels]
+  );
+}
+
+function applyThumb(k, url) {
+  const cv = document.getElementById(`thumb${k}`);
+  const spin = document.getElementById(`spin${k}`);
+  const img = new Image();
+  img.onload = () => {
+    cv.width = img.width; cv.height = img.height;
+    cv.getContext('2d').drawImage(img, 0, 0);
+    cv.style.display = 'block';
+    spin.textContent = '';
+  };
+  img.src = url;
+}
+
+function hoverPreview(k) { /* thumbnails are always shown; nothing extra needed */ }
+function clearHoverPreview() {}
+
+/* ═══════════════════════════════════════════
+   Filter type & kernel selection
+═══════════════════════════════════════════ */
 function setType(type, el) {
   filterType = type;
   document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  document.body.classList.toggle('edge-mode', type === 'edge');
+  document.getElementById('applyBtn').className = `btn primary-${type}`;
 
-  if (type === 'edge') {
-    document.body.classList.add('edge-mode');
-    document.getElementById('applyBtn').className = 'btn primary-edge';
-  } else {
-    document.body.classList.remove('edge-mode');
-    document.getElementById('applyBtn').className = 'btn primary-gaussian';
-  }
-
-  // 更新 card 高亮
-  const activeClass = type === 'gaussian' ? 'active-gaussian' : 'active-edge';
-  document.querySelectorAll('.kernel-card').forEach(c => {
-    c.classList.remove('active-gaussian', 'active-edge');
-  });
-  const activeCard = document.querySelector(`.kernel-card[data-k="${selectedK}"]`);
-  if (activeCard) activeCard.classList.add(activeClass);
+  document.querySelectorAll('.kernel-card').forEach(c => c.classList.remove('active-gaussian','active-edge'));
+  const ac = document.querySelector(`.kernel-card[data-k="${selectedK}"]`);
+  if (ac) ac.classList.add(`active-${type}`);
 
   renderMatrices();
-  updateApplyBtnState();
+  if (origImg) buildThumbnails();
 }
 
 function selectKernel(k, el) {
   selectedK = k;
-  document.querySelectorAll('.kernel-card').forEach(c => {
-    c.classList.remove('active-gaussian', 'active-edge');
-  });
-  const activeClass = filterType === 'gaussian' ? 'active-gaussian' : 'active-edge';
-  el.classList.add(activeClass);
+  document.querySelectorAll('.kernel-card').forEach(c => c.classList.remove('active-gaussian','active-edge'));
+  el.classList.add(`active-${filterType}`);
 }
 
-/* ── Matrix preview ── */
+/* ═══════════════════════════════════════════
+   Matrix preview
+═══════════════════════════════════════════ */
 let matrixOpen = false;
 function toggleMatrix() {
   matrixOpen = !matrixOpen;
-  const box = document.getElementById('matrixBox');
-  box.classList.toggle('open', matrixOpen);
+  document.getElementById('matrixBox').classList.toggle('open', matrixOpen);
   document.querySelector('.matrix-toggle').textContent =
     (matrixOpen ? '▼' : '▶') + ' 查看核心矩陣數值';
   if (matrixOpen) renderMatrices();
 }
 
 function renderMatrices() {
-  [3, 5, 9].forEach(k => {
-    const kDef = KERNELS[filterType][k];
-    const el   = document.getElementById(`m${k}`);
-    el.innerHTML = buildMatrixHTML(kDef.data);
+  [3,5,9].forEach(k => {
+    const el = document.getElementById(`m${k}`);
+    if (filterType === 'gaussian') {
+      el.innerHTML = `<p style="font-size:11px;color:#666;margin-bottom:8px;">1D 核心（水平＆垂直各做一次）</p>` +
+        buildRowHTML(KERNELS.gaussian[k].k1d);
+    } else {
+      el.innerHTML = buildMatrixHTML(KERNELS.edge[k].data);
+    }
   });
 }
 
+function buildRowHTML(row) {
+  let h = '<table class="matrix"><tr>';
+  row.forEach(v => { h += `<td class="${v>0?'pos':v<0?'neg':'zero'}">${v}</td>`; });
+  return h + '</tr></table>';
+}
 function buildMatrixHTML(data) {
-  let html = '<table class="matrix">';
+  let h = '<table class="matrix">';
   data.forEach(row => {
-    html += '<tr>';
-    row.forEach(v => {
-      const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : 'zero';
-      html += `<td class="${cls}">${v}</td>`;
-    });
-    html += '</tr>';
+    h += '<tr>';
+    row.forEach(v => { h += `<td class="${v>0?'pos':v<0?'neg':'zero'}">${v}</td>`; });
+    h += '</tr>';
   });
-  html += '</table>';
-  return html;
+  return h + '</table>';
 }
 
-let activeMtab = 3;
 function showMtab(k, el) {
-  activeMtab = k;
   document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('.matrix-grid').forEach(g => g.classList.remove('active'));
   document.getElementById(`m${k}`).classList.add('active');
 }
 
-function updateApplyBtnState() {
-  const disabled = !origImg;
-  document.getElementById('applyBtn').disabled = disabled;
-  document.getElementById('allBtn').disabled   = disabled;
-}
-
-/* ════════════════════════════════════════════
-   載入圖片
-════════════════════════════════════════════ */
-document.getElementById('fileInput').addEventListener('change', function (e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function (ev) {
-    const img = new Image();
-    img.onload = function () {
-      origImg = img;
-      updateApplyBtnState();
-      renderOriginal(img);
-      document.getElementById('status').textContent =
-        `已載入：${file.name}（${img.width} × ${img.height} px）`;
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-function renderOriginal(img) {
-  const out = document.getElementById('output');
-  out.innerHTML = '';
-  const wrap = makeCanvasWrap('原圖', null);
-  drawImg(wrap.querySelector('canvas'), img);
-  out.appendChild(wrap);
-}
-
-/* ════════════════════════════════════════════
-   套用濾波器
-════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   Apply filters
+═══════════════════════════════════════════ */
 function applySelected() {
-  if (!origImg) return;
+  if (!origImg || isRunning) return;
+  const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
+
   const out = document.getElementById('output');
   out.innerHTML = '';
+  const sk = addSkeleton(out);
 
-  appendOriginal(out);
-
-  const dataURL = applyFilter(origImg, filterType, selectedK);
-  const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
-  const w = makeCanvasWrap(`${selectedK}×${selectedK}  ${typeLabel}`, dataURL, selectedK);
-  out.appendChild(w);
-
-  document.getElementById('status').textContent =
-    `已套用 ${selectedK}×${selectedK} ${typeLabel === '高斯平滑' ? '高斯平滑' : '邊緣偵測'}濾波器`;
+  runWorker(origImg, filterType, selectedK, setProgress, (dataURL, ms) => {
+    sk.remove();
+    const baWrap = makeBeforeAfter(origImg, dataURL, `${selectedK}×${selectedK}  ${typeLabel}`, `${ms} ms`);
+    out.appendChild(baWrap);
+    document.getElementById('status').textContent =
+      `完成 — ${selectedK}×${selectedK} ${typeLabel}，耗時 ${ms} ms`;
+    hideProgress();
+  });
 }
 
 function applyAll() {
-  if (!origImg) return;
-  document.getElementById('status').textContent = '處理中，請稍候…';
+  if (!origImg || isRunning) return;
+  const sizes = [3,5,9];
+  const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
+
   const out = document.getElementById('output');
   out.innerHTML = '';
-  appendOriginal(out);
+  const skeletons = sizes.map(() => addSkeleton(out));
+  let idx = 0;
 
-  setTimeout(() => {
-    const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
-    [3, 5, 9].forEach(k => {
-      const dataURL = applyFilter(origImg, filterType, k);
-      const w = makeCanvasWrap(`${k}×${k}  ${typeLabel}`, dataURL, k);
-      out.appendChild(w);
-    });
-    document.getElementById('status').textContent =
-      `已套用全部三種尺寸（${filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測'}）`;
-  }, 10);
+  function next() {
+    const k  = sizes[idx];
+    const sk = skeletons[idx];
+    idx++;
+
+    const offset = (idx-1) / sizes.length;
+    runWorker(origImg, filterType, k,
+      pct => setProgress(Math.round(offset*100 + pct/sizes.length)),
+      (dataURL, ms) => {
+        sk.replaceWith(makeCanvasWrap(`${k}×${k}  ${typeLabel}`, dataURL, k, ms));
+        if (idx < sizes.length) next();
+        else {
+          document.getElementById('status').textContent =
+            `完成 — 全部三種尺寸（${typeLabel}）`;
+          hideProgress();
+        }
+      }
+    );
+  }
+  next();
 }
 
-function appendOriginal(out) {
-  const wOrig = makeCanvasWrap('原圖', null);
-  drawImg(wOrig.querySelector('canvas'), origImg);
-  out.appendChild(wOrig);
+/* ═══════════════════════════════════════════
+   Web Worker runner
+═══════════════════════════════════════════ */
+function runWorker(img, type, kSize, onProgress, onDone) {
+  isRunning = true;
+  setProgress(0);
+  document.getElementById('progressWrap').classList.add('visible');
+  document.getElementById('applyBtn').disabled = true;
+  document.getElementById('allBtn').disabled   = true;
+
+  const srcCv = document.createElement('canvas');
+  srcCv.width = img.width; srcCv.height = img.height;
+  srcCv.getContext('2d').drawImage(img, 0, 0);
+  const imgData = srcCv.getContext('2d').getImageData(0, 0, img.width, img.height);
+
+  const kernelDef = type === 'gaussian'
+    ? { k1d: KERNELS.gaussian[kSize].k1d, sum1d: KERNELS.gaussian[kSize].sum1d }
+    : { data: KERNELS.edge[kSize].data, sum: KERNELS.edge[kSize].sum };
+
+  const t0 = performance.now();
+  const worker = makeWorker();
+  worker.onmessage = e => {
+    if (e.data.result !== undefined) {
+      const ms = Math.round(performance.now() - t0);
+      const pixels = new Uint8ClampedArray(e.data.result);
+      const dc = document.createElement('canvas');
+      dc.width = img.width; dc.height = img.height;
+      dc.getContext('2d').putImageData(new ImageData(pixels, img.width, img.height), 0, 0);
+      worker.terminate();
+      isRunning = false;
+      document.getElementById('applyBtn').disabled = false;
+      document.getElementById('allBtn').disabled   = false;
+      onDone(dc.toDataURL('image/png'), ms);
+    } else if (e.data.progress !== undefined) {
+      onProgress(e.data.progress);
+    }
+  };
+
+  const pixelsCopy = imgData.data.slice().buffer;
+  worker.postMessage(
+    { type, kSize, pixels: pixelsCopy, width: img.width, height: img.height, kernelDef, grayscale },
+    [pixelsCopy]
+  );
 }
 
-/* ════════════════════════════════════════════
-   DOM 工具
-════════════════════════════════════════════ */
-function makeCanvasWrap(label, dataURL, k) {
+/* ═══════════════════════════════════════════
+   Before / After slider
+═══════════════════════════════════════════ */
+function makeBeforeAfter(origImg, filteredURL, label, timeMeta) {
   const wrap = document.createElement('div');
-  wrap.className = 'cv-wrap';
+  wrap.className = 'ba-wrap';
 
-  const lbl  = document.createElement('div');
-  lbl.className = 'cv-label';
+  const header = document.createElement('div');
+  header.className = 'ba-header';
+  header.innerHTML = `<span>${label}</span><span class="ba-hint">← 拖曳滑桿比較 →　　<span class="meta" style="color:#aaa">${timeMeta}</span></span>`;
+  wrap.appendChild(header);
 
-  const span = document.createElement('span');
-  span.textContent = label;
-  lbl.appendChild(span);
+  const stage = document.createElement('div');
+  stage.className = 'ba-stage';
+  wrap.appendChild(stage);
 
-  if (dataURL) {
-    const a = document.createElement('a');
-    a.className   = 'save-link';
-    a.textContent = '下載 PNG';
-    a.download    = `filtered_${k}x${k}_${filterType}.png`;
-    a.href        = dataURL;
-    lbl.appendChild(a);
+  // After (bottom layer — full width)
+  const afterImg = new Image();
+  afterImg.className = 'ba-after';
+  afterImg.src = filteredURL;
+  stage.appendChild(afterImg);
+
+  // Before clip (top layer)
+  const clip = document.createElement('div');
+  clip.className = 'ba-before-clip';
+  stage.appendChild(clip);
+
+  const beforeImg = document.createElement('canvas');
+  beforeImg.className = 'ba-before';
+  beforeImg.width = origImg.width; beforeImg.height = origImg.height;
+  const bCtx = beforeImg.getContext('2d');
+  if (grayscale) {
+    const tc = document.createElement('canvas');
+    tc.width = origImg.width; tc.height = origImg.height;
+    const tCtx = tc.getContext('2d');
+    tCtx.drawImage(origImg, 0, 0);
+    const id = tCtx.getImageData(0, 0, origImg.width, origImg.height);
+    for (let i=0; i<id.data.length; i+=4) {
+      const g = Math.round(id.data[i]*0.587 + id.data[i+1]*0.299 + id.data[i+2]*0.114);
+      id.data[i]=id.data[i+1]=id.data[i+2]=g;
+    }
+    tCtx.putImageData(id, 0, 0);
+    bCtx.drawImage(tc, 0, 0);
+  } else {
+    bCtx.drawImage(origImg, 0, 0);
+  }
+  clip.appendChild(beforeImg);
+
+  // Divider line + handle
+  const line   = document.createElement('div'); line.className = 'ba-line';
+  const handle = document.createElement('div'); handle.className = 'ba-handle'; handle.textContent = '⇔';
+  const lblL   = document.createElement('div'); lblL.className = 'ba-label left';  lblL.textContent = '原圖';
+  const lblR   = document.createElement('div'); lblR.className = 'ba-label right'; lblR.textContent = '濾波後';
+  stage.appendChild(line); stage.appendChild(handle);
+  stage.appendChild(lblL); stage.appendChild(lblR);
+
+  // Set initial position to 50%
+  function setPos(pct) {
+    pct = Math.max(2, Math.min(98, pct));
+    const px = stage.offsetWidth * pct / 100;
+    clip.style.width         = px + 'px';
+    beforeImg.style.width    = stage.offsetWidth + 'px';
+    line.style.left          = pct + '%';
+    handle.style.left        = pct + '%';
   }
 
-  wrap.appendChild(lbl);
+  afterImg.onload = () => setPos(50);
+  window.addEventListener('resize', () => setPos(
+    parseFloat(line.style.left) || 50
+  ));
 
-  const cv = document.createElement('canvas');
-  wrap.appendChild(cv);
+  // Drag interaction
+  let dragging = false;
+  function getX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
 
-  if (dataURL) {
-    const img = new Image();
-    img.onload = () => {
-      cv.width  = img.width;
-      cv.height = img.height;
-      cv.getContext('2d').drawImage(img, 0, 0);
-    };
-    img.src = dataURL;
+  stage.addEventListener('mousedown',  e => { dragging = true; move(e); });
+  stage.addEventListener('touchstart', e => { dragging = true; move(e); }, { passive: true });
+  window.addEventListener('mousemove', e => { if (dragging) move(e); });
+  window.addEventListener('touchmove', e => { if (dragging) move(e); }, { passive: true });
+  window.addEventListener('mouseup',   () => { dragging = false; });
+  window.addEventListener('touchend',  () => { dragging = false; });
+
+  function move(e) {
+    const rect = stage.getBoundingClientRect();
+    const pct  = (getX(e) - rect.left) / rect.width * 100;
+    setPos(pct);
   }
+
+  // Also add a download link row below
+  const footer = document.createElement('div');
+  footer.style.cssText = 'padding:6px 14px;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:flex-end;font-size:11px;';
+  const dl = document.createElement('a');
+  dl.className = 'save-link';
+  dl.textContent = '下載濾波後 PNG';
+  dl.href = filteredURL;
+  dl.download = `filtered_${label.replace(/\s/g,'_')}_${filterType}.png`;
+  footer.appendChild(dl);
+  wrap.appendChild(footer);
 
   return wrap;
 }
 
-function drawImg(cv, img) {
-  cv.width  = img.width;
-  cv.height = img.height;
-  cv.getContext('2d').drawImage(img, 0, 0);
+/* ═══════════════════════════════════════════
+   DOM helpers
+═══════════════════════════════════════════ */
+function makeCanvasWrap(label, dataURL, k, ms) {
+  const wrap = document.createElement('div');
+  wrap.className = 'cv-wrap';
+  const lbl = document.createElement('div');
+  lbl.className = 'cv-label';
+  const span = document.createElement('span'); span.textContent = label;
+  lbl.appendChild(span);
+  if (dataURL) {
+    const right = document.createElement('span');
+    right.style.cssText = 'display:flex;align-items:center;gap:10px;';
+    if (ms !== undefined) {
+      const meta = document.createElement('span'); meta.className='meta'; meta.textContent=`${ms} ms`;
+      right.appendChild(meta);
+    }
+    const a = document.createElement('a');
+    a.className='save-link'; a.textContent='下載 PNG';
+    a.download=`filtered_${k}x${k}_${filterType}.png`; a.href=dataURL;
+    right.appendChild(a); lbl.appendChild(right);
+  }
+  wrap.appendChild(lbl);
+  const cv = document.createElement('canvas'); wrap.appendChild(cv);
+  if (dataURL) {
+    const img = new Image();
+    img.onload = () => { cv.width=img.width; cv.height=img.height; cv.getContext('2d').drawImage(img,0,0); };
+    img.src = dataURL;
+  }
+  return wrap;
 }
 
-/* ════════════════════════════════════════════
-   核心：2D 卷積
-════════════════════════════════════════════ */
-function applyFilter(img, type, kSize) {
-  const srcCv = document.createElement('canvas');
-  srcCv.width  = img.width;
-  srcCv.height = img.height;
-  const ctx = srcCv.getContext('2d');
-  ctx.drawImage(img, 0, 0);
+function addSkeleton(out) {
+  const sk = document.createElement('div');
+  sk.className = 'skeleton';
+  sk.innerHTML = '<div class="skeleton-label"></div><div class="skeleton-img"></div>';
+  out.appendChild(sk);
+  return sk;
+}
 
-  const src   = ctx.getImageData(0, 0, img.width, img.height);
-  const dst   = ctx.createImageData(img.width, img.height);
-  const kDef  = KERNELS[type][kSize];
-  const kd    = kDef.data;
-  const ks    = kDef.sum;          // null = edge detection (no normalize)
-  const half  = Math.floor(kSize / 2);
-  const W     = img.width;
-  const H     = img.height;
-  const sd    = src.data;
-  const dd    = dst.data;
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent  = pct + '%';
+}
 
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      let r = 0, g = 0, b = 0;
-
-      for (let ky = 0; ky < kSize; ky++) {
-        for (let kx = 0; kx < kSize; kx++) {
-          const sy  = Math.min(H - 1, Math.max(0, y + ky - half));
-          const sx  = Math.min(W - 1, Math.max(0, x + kx - half));
-          const idx = (sy * W + sx) * 4;
-          const w   = kd[ky][kx];
-          r += sd[idx    ] * w;
-          g += sd[idx + 1] * w;
-          b += sd[idx + 2] * w;
-        }
-      }
-
-      const oi = (y * W + x) * 4;
-
-      if (ks !== null) {
-        // 高斯平滑：除以總和 normalize
-        dd[oi    ] = Math.round(r / ks);
-        dd[oi + 1] = Math.round(g / ks);
-        dd[oi + 2] = Math.round(b / ks);
-      } else {
-        // 邊緣偵測：clamp 至 [0, 255]
-        dd[oi    ] = Math.min(255, Math.max(0, Math.round(r)));
-        dd[oi + 1] = Math.min(255, Math.max(0, Math.round(g)));
-        dd[oi + 2] = Math.min(255, Math.max(0, Math.round(b)));
-      }
-
-      dd[oi + 3] = sd[oi + 3]; // 保留 alpha
-    }
-  }
-
-  const dstCv = document.createElement('canvas');
-  dstCv.width  = W;
-  dstCv.height = H;
-  dstCv.getContext('2d').putImageData(dst, 0, 0);
-  return dstCv.toDataURL('image/png');
+function hideProgress() {
+  setTimeout(() => {
+    document.getElementById('progressWrap').classList.remove('visible');
+    setProgress(0);
+  }, 600);
 }
 </script>
 </body>
