@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>影像濾波器實驗室</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .lab {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #111;
+      flex: 1;
+    }
+
+    .upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #111;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .upload-btn:hover { background: #ebebeb; }
+    #fileInput { display: none; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    /* ── Filter type tabs ── */
+    .type-tabs {
+      display: flex;
+      gap: 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      background: #ebebeb;
+    }
+
+    .type-tab {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #666;
+      transition: background 0.15s, color 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .type-tab .tab-name { font-size: 14px; font-weight: 600; }
+    .type-tab .tab-desc { font-size: 11px; color: #999; font-weight: 400; }
+
+    .type-tab.active {
+      background: #fff;
+      color: #111;
+      border-radius: 9px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .type-tab.active .tab-desc { color: #666; }
+
+    .type-tab.gaussian.active { border-top: 3px solid #378ADD; }
+    .type-tab.edge.active     { border-top: 3px solid #D85A30; }
+
+    /* ── Kernel cards ── */
+    .kernels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .kernel-card {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: #fff;
+    }
+
+    .kernel-card.active-gaussian {
+      border: 2px solid #378ADD;
+      background: #EBF4FD;
+    }
+    .kernel-card.active-edge {
+      border: 2px solid #D85A30;
+      background: #FAEEE9;
+    }
+
+    .kernel-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 4px;
+    }
+    .kernel-card p {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* kernel descriptions per type */
+    .desc-gaussian { display: block; }
+    .desc-edge     { display: none; }
+
+    body.edge-mode .desc-gaussian { display: none; }
+    body.edge-mode .desc-edge     { display: block; }
+
+    /* ── Matrix preview ── */
+    .matrix-toggle {
+      font-size: 12px;
+      color: #378ADD;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      user-select: none;
+    }
+    body.edge-mode .matrix-toggle { color: #D85A30; }
+    .matrix-toggle:hover { text-decoration: underline; }
+
+    .matrix-box {
+      display: none;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    .matrix-box.open { display: block; }
+
+    .matrix-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .mtab {
+      padding: 4px 12px;
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #fff;
+      color: #666;
+    }
+    .mtab.active { background: #111; color: #fff; border-color: #111; }
+
+    .matrix-grid { display: none; }
+    .matrix-grid.active { display: block; }
+
+    table.matrix {
+      border-collapse: collapse;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+    }
+    table.matrix td {
+      padding: 4px 10px;
+      text-align: right;
+      border: 1px solid #e5e5e5;
+      min-width: 36px;
+    }
+    td.pos { color: #185FA5; }
+    td.neg { color: #993C1D; }
+    td.zero { color: #999; }
+
+    /* ── Buttons ── */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 9px 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      background: #fff;
+      color: #111;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #ebebeb; }
+    .btn.primary-gaussian { background: #378ADD; color: #fff; border-color: #185FA5; }
+    .btn.primary-gaussian:hover { background: #185FA5; }
+    .btn.primary-edge     { background: #D85A30; color: #fff; border-color: #993C1D; }
+    .btn.primary-edge:hover { background: #993C1D; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .status {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 1rem;
+      min-height: 16px;
+    }
+
+    /* ── Canvas grid ── */
+    .canvases {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .cv-wrap {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .cv-label {
+      font-size: 12px;
+      color: #555;
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+    }
+
+    .save-link {
+      color: #378ADD;
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: none;
+    }
+    body.edge-mode .save-link { color: #D85A30; }
+    .save-link:hover { text-decoration: underline; }
+
+    canvas { display: block; width: 100%; height: auto; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #aaa;
+      font-size: 14px;
+      border: 2px dashed #ddd;
+      border-radius: 12px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+<div class="lab">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <span class="title">影像濾波器實驗室</span>
+    <label class="upload-btn" for="fileInput">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1v10M4 5l4-4 4 4M2 13h12"
+              stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      載入圖片
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
+
+  <!-- Step 1: filter type -->
+  <div class="section-label">Step 1 — 選擇濾波器類型</div>
+  <div class="type-tabs">
+    <button class="type-tab gaussian active" onclick="setType('gaussian', this)">
+      <span class="tab-name">高斯平滑</span>
+      <span class="tab-desc">Gaussian Smoothing — 模糊 / 降噪</span>
+    </button>
+    <button class="type-tab edge" onclick="setType('edge', this)">
+      <span class="tab-name">邊緣偵測</span>
+      <span class="tab-desc">Edge Detection — 凸顯輪廓</span>
+    </button>
+  </div>
+
+  <!-- Step 2: kernel size -->
+  <div class="section-label">Step 2 — 選擇濾波器尺寸</div>
+  <div class="kernels">
+    <div class="kernel-card active-gaussian" data-k="3" onclick="selectKernel(3, this)">
+      <h3>3 × 3</h3>
+      <span class="desc-gaussian"><p>輕微平滑<br>保留邊緣細節</p></span>
+      <span class="desc-edge"><p>精細邊緣<br>雜訊較多</p></span>
+    </div>
+    <div class="kernel-card" data-k="5" onclick="selectKernel(5, this)">
+      <h3>5 × 5</h3>
+      <span class="desc-gaussian"><p>中度模糊<br>噪點明顯降低</p></span>
+      <span class="desc-edge"><p>中等輪廓<br>十字加權</p></span>
+    </div>
+    <div class="kernel-card" data-k="9" onclick="selectKernel(9, this)">
+      <h3>9 × 9</h3>
+      <span class="desc-gaussian"><p>強力平滑<br>紋理顯著柔化</p></span>
+      <span class="desc-edge"><p>十字方向邊緣<br>水平/垂直敏感</p></span>
+    </div>
+  </div>
+
+  <!-- Matrix preview toggle -->
+  <span class="matrix-toggle" onclick="toggleMatrix()">▶ 查看核心矩陣數值</span>
+  <div class="matrix-box" id="matrixBox">
+    <div class="matrix-tabs">
+      <button class="mtab active" onclick="showMtab(3, this)">3×3</button>
+      <button class="mtab" onclick="showMtab(5, this)">5×5</button>
+      <button class="mtab" onclick="showMtab(9, this)">9×9</button>
+    </div>
+    <div id="m3" class="matrix-grid active"></div>
+    <div id="m5" class="matrix-grid"></div>
+    <div id="m9" class="matrix-grid"></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Step 3: apply -->
+  <div class="section-label">Step 3 — 套用</div>
+  <div class="actions">
+    <button class="btn primary-gaussian" id="applyBtn" onclick="applySelected()" disabled>
+      套用選取濾波器
+    </button>
+    <button class="btn" id="allBtn" onclick="applyAll()" disabled>
+      套用全部三種尺寸
+    </button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div id="output">
+    <div class="empty">請先載入一張圖片，再選擇濾波器套用</div>
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   核心定義
+════════════════════════════════════════════ */
+const KERNELS = {
+  gaussian: {
+    3: { data: [[1,2,1],[2,4,2],[1,2,1]], sum: 16 },
+    5: {
+      data: [
+        [1, 4, 6, 4,1],
+        [4,16,24,16,4],
+        [6,24,36,24,6],
+        [4,16,24,16,4],
+        [1, 4, 6, 4,1]
+      ],
+      sum: 256
+    },
+    9: {
+      data: [
+        [ 1, 4,10, 16, 19, 16,10, 4, 1],
+        [ 4,16,36, 64, 76, 64,36,16, 4],
+        [10,36,81,144,171,144,81,36,10],
+        [16,64,144,256,304,256,144,64,16],
+        [19,76,171,304,361,304,171,76,19],
+        [16,64,144,256,304,256,144,64,16],
+        [10,36,81,144,171,144,81,36,10],
+        [ 4,16,36, 64, 76, 64,36,16, 4],
+        [ 1, 4,10, 16, 19, 16,10, 4, 1]
+      ],
+      sum: 4096
+    }
+  },
+  edge: {
+    3: {
+      data: [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]],
+      sum: null  // 不做 normalize，直接 clamp
+    },
+    5: {
+      data: [
+        [-1,-1,-1,-1,-1],
+        [-1, 1, 2, 1,-1],
+        [-1, 2, 4, 2,-1],
+        [-1, 1, 2, 1,-1],
+        [-1,-1,-1,-1,-1]
+      ],
+      sum: null
+    },
+    9: {
+      data: [
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1, 8, 8,20, 8, 8,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1,-1,-1, 8,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+      ],
+      sum: null
+    }
+  }
+};
+
+/* ════════════════════════════════════════════
+   狀態
+════════════════════════════════════════════ */
+let origImg    = null;
+let filterType = 'gaussian';   // 'gaussian' | 'edge'
+let selectedK  = 3;
+
+/* ════════════════════════════════════════════
+   UI 互動
+════════════════════════════════════════════ */
+function setType(type, el) {
+  filterType = type;
+  document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  if (type === 'edge') {
+    document.body.classList.add('edge-mode');
+    document.getElementById('applyBtn').className = 'btn primary-edge';
+  } else {
+    document.body.classList.remove('edge-mode');
+    document.getElementById('applyBtn').className = 'btn primary-gaussian';
+  }
+
+  // 更新 card 高亮
+  const activeClass = type === 'gaussian' ? 'active-gaussian' : 'active-edge';
+  document.querySelectorAll('.kernel-card').forEach(c => {
+    c.classList.remove('active-gaussian', 'active-edge');
+  });
+  const activeCard = document.querySelector(`.kernel-card[data-k="${selectedK}"]`);
+  if (activeCard) activeCard.classList.add(activeClass);
+
+  renderMatrices();
+  updateApplyBtnState();
+}
+
+function selectKernel(k, el) {
+  selectedK = k;
+  document.querySelectorAll('.kernel-card').forEach(c => {
+    c.classList.remove('active-gaussian', 'active-edge');
+  });
+  const activeClass = filterType === 'gaussian' ? 'active-gaussian' : 'active-edge';
+  el.classList.add(activeClass);
+}
+
+/* ── Matrix preview ── */
+let matrixOpen = false;
+function toggleMatrix() {
+  matrixOpen = !matrixOpen;
+  const box = document.getElementById('matrixBox');
+  box.classList.toggle('open', matrixOpen);
+  document.querySelector('.matrix-toggle').textContent =
+    (matrixOpen ? '▼' : '▶') + ' 查看核心矩陣數值';
+  if (matrixOpen) renderMatrices();
+}
+
+function renderMatrices() {
+  [3, 5, 9].forEach(k => {
+    const kDef = KERNELS[filterType][k];
+    const el   = document.getElementById(`m${k}`);
+    el.innerHTML = buildMatrixHTML(kDef.data);
+  });
+}
+
+function buildMatrixHTML(data) {
+  let html = '<table class="matrix">';
+  data.forEach(row => {
+    html += '<tr>';
+    row.forEach(v => {
+      const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : 'zero';
+      html += `<td class="${cls}">${v}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+  return html;
+}
+
+let activeMtab = 3;
+function showMtab(k, el) {
+  activeMtab = k;
+  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.matrix-grid').forEach(g => g.classList.remove('active'));
+  document.getElementById(`m${k}`).classList.add('active');
+}
+
+function updateApplyBtnState() {
+  const disabled = !origImg;
+  document.getElementById('applyBtn').disabled = disabled;
+  document.getElementById('allBtn').disabled   = disabled;
+}
+
+/* ════════════════════════════════════════════
+   載入圖片
+════════════════════════════════════════════ */
+document.getElementById('fileInput').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (ev) {
+    const img = new Image();
+    img.onload = function () {
+      origImg = img;
+      updateApplyBtnState();
+      renderOriginal(img);
+      document.getElementById('status').textContent =
+        `已載入：${file.name}（${img.width} × ${img.height} px）`;
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+function renderOriginal(img) {
+  const out = document.getElementById('output');
+  out.innerHTML = '';
+  const wrap = makeCanvasWrap('原圖', null);
+  drawImg(wrap.querySelector('canvas'), img);
+  out.appendChild(wrap);
+}
+
+/* ════════════════════════════════════════════
+   套用濾波器
+════════════════════════════════════════════ */
+function applySelected() {
+  if (!origImg) return;
+  const out = document.getElementById('output');
+  out.innerHTML = '';
+
+  appendOriginal(out);
+
+  const dataURL = applyFilter(origImg, filterType, selectedK);
+  const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
+  const w = makeCanvasWrap(`${selectedK}×${selectedK}  ${typeLabel}`, dataURL, selectedK);
+  out.appendChild(w);
+
+  document.getElementById('status').textContent =
+    `已套用 ${selectedK}×${selectedK} ${typeLabel === '高斯平滑' ? '高斯平滑' : '邊緣偵測'}濾波器`;
+}
+
+function applyAll() {
+  if (!origImg) return;
+  document.getElementById('status').textContent = '處理中，請稍候…';
+  const out = document.getElementById('output');
+  out.innerHTML = '';
+  appendOriginal(out);
+
+  setTimeout(() => {
+    const typeLabel = filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測';
+    [3, 5, 9].forEach(k => {
+      const dataURL = applyFilter(origImg, filterType, k);
+      const w = makeCanvasWrap(`${k}×${k}  ${typeLabel}`, dataURL, k);
+      out.appendChild(w);
+    });
+    document.getElementById('status').textContent =
+      `已套用全部三種尺寸（${filterType === 'gaussian' ? '高斯平滑' : '邊緣偵測'}）`;
+  }, 10);
+}
+
+function appendOriginal(out) {
+  const wOrig = makeCanvasWrap('原圖', null);
+  drawImg(wOrig.querySelector('canvas'), origImg);
+  out.appendChild(wOrig);
+}
+
+/* ════════════════════════════════════════════
+   DOM 工具
+════════════════════════════════════════════ */
+function makeCanvasWrap(label, dataURL, k) {
+  const wrap = document.createElement('div');
+  wrap.className = 'cv-wrap';
+
+  const lbl  = document.createElement('div');
+  lbl.className = 'cv-label';
+
+  const span = document.createElement('span');
+  span.textContent = label;
+  lbl.appendChild(span);
+
+  if (dataURL) {
+    const a = document.createElement('a');
+    a.className   = 'save-link';
+    a.textContent = '下載 PNG';
+    a.download    = `filtered_${k}x${k}_${filterType}.png`;
+    a.href        = dataURL;
+    lbl.appendChild(a);
+  }
+
+  wrap.appendChild(lbl);
+
+  const cv = document.createElement('canvas');
+  wrap.appendChild(cv);
+
+  if (dataURL) {
+    const img = new Image();
+    img.onload = () => {
+      cv.width  = img.width;
+      cv.height = img.height;
+      cv.getContext('2d').drawImage(img, 0, 0);
+    };
+    img.src = dataURL;
+  }
+
+  return wrap;
+}
+
+function drawImg(cv, img) {
+  cv.width  = img.width;
+  cv.height = img.height;
+  cv.getContext('2d').drawImage(img, 0, 0);
+}
+
+/* ════════════════════════════════════════════
+   核心：2D 卷積
+════════════════════════════════════════════ */
+function applyFilter(img, type, kSize) {
+  const srcCv = document.createElement('canvas');
+  srcCv.width  = img.width;
+  srcCv.height = img.height;
+  const ctx = srcCv.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const src   = ctx.getImageData(0, 0, img.width, img.height);
+  const dst   = ctx.createImageData(img.width, img.height);
+  const kDef  = KERNELS[type][kSize];
+  const kd    = kDef.data;
+  const ks    = kDef.sum;          // null = edge detection (no normalize)
+  const half  = Math.floor(kSize / 2);
+  const W     = img.width;
+  const H     = img.height;
+  const sd    = src.data;
+  const dd    = dst.data;
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      let r = 0, g = 0, b = 0;
+
+      for (let ky = 0; ky < kSize; ky++) {
+        for (let kx = 0; kx < kSize; kx++) {
+          const sy  = Math.min(H - 1, Math.max(0, y + ky - half));
+          const sx  = Math.min(W - 1, Math.max(0, x + kx - half));
+          const idx = (sy * W + sx) * 4;
+          const w   = kd[ky][kx];
+          r += sd[idx    ] * w;
+          g += sd[idx + 1] * w;
+          b += sd[idx + 2] * w;
+        }
+      }
+
+      const oi = (y * W + x) * 4;
+
+      if (ks !== null) {
+        // 高斯平滑：除以總和 normalize
+        dd[oi    ] = Math.round(r / ks);
+        dd[oi + 1] = Math.round(g / ks);
+        dd[oi + 2] = Math.round(b / ks);
+      } else {
+        // 邊緣偵測：clamp 至 [0, 255]
+        dd[oi    ] = Math.min(255, Math.max(0, Math.round(r)));
+        dd[oi + 1] = Math.min(255, Math.max(0, Math.round(g)));
+        dd[oi + 2] = Math.min(255, Math.max(0, Math.round(b)));
+      }
+
+      dd[oi + 3] = sd[oi + 3]; // 保留 alpha
+    }
+  }
+
+  const dstCv = document.createElement('canvas');
+  dstCv.width  = W;
+  dstCv.height = H;
+  dstCv.getContext('2d').putImageData(dst, 0, 0);
+  return dstCv.toDataURL('image/png');
+}
+</script>
+</body>
+</html>
